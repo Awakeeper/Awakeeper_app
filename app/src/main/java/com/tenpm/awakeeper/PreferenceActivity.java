@@ -44,7 +44,8 @@ public class PreferenceActivity extends AppCompatActivity implements AdapterView
 
     void ListDir(File f){
         //path = new File(f.getPath() + "/Music");
-        path = new File("/sdcard/mp3");
+        path = new File(f.getPath());
+        //path = new File("/sdcard/mp3");
         Log.d(TAG, "path: " + path);
         File[] files = path.listFiles();
         fileList.clear();
