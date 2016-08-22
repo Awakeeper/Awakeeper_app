@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSounds(){
         soundId = soundPool.load(this, R.raw.siren, 1);
-
     }
 
     public int currentTime = 0;
