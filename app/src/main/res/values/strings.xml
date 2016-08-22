@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Awakeeper</string>
+    <string name="idle_text">대기중입니다</string>
+    <string name="drive_text">주행중입니다</string>
+    <string name="drowsy_text1">졸음 1단계 감지되었습니다</string>
+    <string name="drowsy_text2">졸음 2단계 감지되었습니다</string>
+    <string name="loading_text">로딩중입니다...</string>
 </resources>

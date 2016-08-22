@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ssomai.android.scalablelayout.ScalableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/main_textview"
+    android:layout_gravity="center"
+    android:background="@android:color/darker_gray"
+    sl:scale_base_height="768"
+    sl:scale_base_width="1280">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:color/white"
+        sl:scale_height="220"
+        sl:scale_left="400"
+        sl:scale_top="230"
+        sl:scale_width="220" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="@string/loading_text"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        sl:scale_height="130"
+        sl:scale_left="370"
+        sl:scale_textsize="50"
+        sl:scale_top="500"
+        sl:scale_width="500" />
+</com.ssomai.android.scalablelayout.ScalableLayout>

@@ -1,6 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ssomai.android.scalablelayout.ScalableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sl="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/main_textview"
+    android:layout_gravity="center"
+    android:background="@android:color/darker_gray"
+    sl:scale_base_height="768"
+    sl:scale_base_width="1280">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/gpsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="GPS: 0, 0"
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="0"
+        sl:scale_textsize="30"
+        sl:scale_top="50"
+        sl:scale_width="300" />
+
+    <TextView
+        android:id="@+id/velocityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="속도: "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="0"
+        sl:scale_textsize="30"
+        sl:scale_top="120"
+        sl:scale_width="300" />
+
+    <TextView
+        android:id="@+id/angleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="핸들 각도 "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="0"
+        sl:scale_textsize="30"
+        sl:scale_top="190"
+        sl:scale_width="300" />
+
+    <TextView
+        android:id="@+id/heartbeatText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="심박수 "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="990"
+        sl:scale_textsize="30"
+        sl:scale_top="50"
+        sl:scale_width="300" />
+
+    <TextView
+        android:id="@+id/irisText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="홍채: "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="990"
+        sl:scale_textsize="30"
+        sl:scale_top="120"
+        sl:scale_width="300" />
+
+    <TextView
+        android:id="@+id/stateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:text="@string/idle_text"
+        android:textColor="@android:color/white"
+        sl:scale_height="130"
+        sl:scale_left="340"
+        sl:scale_textsize="50"
+        sl:scale_top="300"
+        sl:scale_width="500" />
+
+    <!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@android:color/white"-->
+    <!--sl:scale_height="220"-->
+    <!--sl:scale_left="400"-->
+    <!--sl:scale_top="230"-->
+    <!--sl:scale_width="220" />-->
+</com.ssomai.android.scalablelayout.ScalableLayout>
