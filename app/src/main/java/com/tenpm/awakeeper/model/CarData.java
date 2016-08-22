@@ -10,6 +10,14 @@ public class CarData {
     private double angle;
     private String roadType;
 
+    public CarData(double gpsX, double gpsY, int velocity, double angle, String roadType) {
+        this.gpsX = gpsX;
+        this.gpsY = gpsY;
+        this.velocity = velocity;
+        this.angle = angle;
+        this.roadType = roadType;
+    }
+
     public double getGpsX() {
         return gpsX;
     }
