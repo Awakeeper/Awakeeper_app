@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         timeText = (TextView)findViewById(R.id.timeText);
         coffeeText = (TextView)findViewById(R.id.coffeeText);
         coffeeImg = (ImageView)findViewById(R.id.coffeeImg);
+        rpmText = (TextView)findViewById(R.id.rpmText);
+        coText = (TextView)findViewById(R.id.coText);
+        windowOffsetText = (TextView)findViewById(R.id.windowOffsetText);
 
         prefButton = (Button)findViewById(R.id.prefButton);
         prefButton.setOnClickListener(new View.OnClickListener() {
@@ -203,9 +206,9 @@ public class MainActivity extends AppCompatActivity {
                         heartbeatText.setText("심박수: " + sensorDataArrayList.get(currentTime).getHartBeat());
                         irisText.setText("홍채값: " + sensorDataArrayList.get(currentTime).getIris());
                         timeText.setText("시간: " + currentTime + "초");
-                        // 일산화탄소농도
-                        // 창문 열어진 길이
-                        // 엔진 rpm
+                        coText.setText("CO농도 " + carDataArrayList.get(currentTime).getCO());
+                        windowOffsetText.setText("창문열림: " + carDataArrayList.get(currentTime).getWindowOffset());
+                        rpmText.setText("RPM: " + carDataArrayList.get(currentTime).getRPM());
 
                         if(CurrentState == STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() > 0){
                             driveState();

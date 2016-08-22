@@ -51,6 +51,19 @@
         sl:scale_width="300" />
 
     <TextView
+        android:id="@+id/rpmText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="RPM: "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="0"
+        sl:scale_textsize="30"
+        sl:scale_top="260"
+        sl:scale_width="300" />
+
+    <TextView
         android:id="@+id/heartbeatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,6 +74,32 @@
         sl:scale_left="990"
         sl:scale_textsize="30"
         sl:scale_top="50"
+        sl:scale_width="330" />
+
+    <TextView
+        android:id="@+id/coText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="CO농도: "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="990"
+        sl:scale_textsize="30"
+        sl:scale_top="120"
+        sl:scale_width="330" />
+
+    <TextView
+        android:id="@+id/windowOffsetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:text="창문열림: "
+        android:textColor="@android:color/white"
+        sl:scale_height="70"
+        sl:scale_left="990"
+        sl:scale_textsize="30"
+        sl:scale_top="190"
         sl:scale_width="330" />
 
     <TextView
@@ -132,11 +171,11 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:color/white"
-        sl:scale_height="500"
-        sl:scale_left="400"
-        sl:scale_top="190"
-        sl:scale_width="400" />
+        android:background="@drawable/starbucks"
+        sl:scale_height="374"
+        sl:scale_left="410"
+        sl:scale_top="250"
+        sl:scale_width="405" />
 
     <TextView
         android:id="@+id/coffeeText"
@@ -149,7 +188,7 @@
         android:textColor="@android:color/white"
         sl:scale_height="130"
         sl:scale_left="360"
-        sl:scale_textsize="50"
+        sl:scale_textsize="40"
         sl:scale_top="60"
         sl:scale_width="500" />
 </com.ssomai.android.scalablelayout.ScalableLayout>
