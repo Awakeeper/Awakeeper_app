@@ -135,11 +135,8 @@ public class MainActivity extends AppCompatActivity {
         String filePath = "/sdcard/" + "경찰사이렌.mp3";
         // 오디오 파일을 로딩한다
         try {
-            //mPlayer = new MediaPlayer();
-            //mPlayer.setDataSource(filePath);
             mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
             mPlayer.setOnCompletionListener(mCompleteListener);
-            //mPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -308,16 +305,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void playSinging(){
-<<<<<<< HEAD
-
-=======
         Log.d(TAG, "playsinging");
         stateText.setText(R.string.singing_text);
         CurrentState = STATE_SINGING;
         mPlayer = MediaPlayer.create(MainActivity.this, R.raw.big_boy);
         mPlayer.setOnCompletionListener(mCompleteListener);
         playMusic();
->>>>>>> 0865b335663a549876036f93ed21004d1ff08bc3
     }
 
     private int originalVolume = 0;
