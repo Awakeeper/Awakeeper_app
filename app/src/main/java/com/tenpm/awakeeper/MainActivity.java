@@ -126,11 +126,12 @@ public class MainActivity extends AppCompatActivity {
         String filePath = "/sdcard/" + "경찰사이렌.mp3";
         // 오디오 파일을 로딩한다
         try {
-            mPlayer = new MediaPlayer();
-            mPlayer.setDataSource(filePath);
-            mPlayer.setOnCompletionListener(mCompleteListener);
-            mPlayer.prepare();
-        } catch (IOException e) {
+            //mPlayer = new MediaPlayer();
+            //mPlayer.setDataSource(filePath);
+            mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren);
+            //mPlayer.setOnCompletionListener(mCompleteListener);
+            //mPlayer.prepare();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -157,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
         {
             mPlayer.pause();
             mPlayer.seekTo(0);
+            try {
+                mPlayer.prepare();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
