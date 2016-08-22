@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.tenpm.awakeeper.model.CarData;
+import com.tenpm.awakeeper.model.SensorData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,18 +25,19 @@ import java.io.File;
 import java.io.IOException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.impl.execchain.MainClientExec;
 
 public class SplashActivity extends AppCompatActivity {
-    private Handler mHandler;
-    private Runnable mRunnable;
     private final int PERMISSION_INTERNET = 99;
     private final String TAG = "SplashActivity";
+    private boolean isLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
+        getJSON();
     }
 
     @Override
@@ -43,19 +45,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onresume");
         //checkPermission();
-        getJSON();
-
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        };
-
-        mHandler = new Handler();
-        //mHandler.postDelayed(mRunnable, 5000);
     }
 
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -68,12 +57,25 @@ public class SplashActivity extends AppCompatActivity {
                 Log.i("test", "jsonData: " + resBody);
 
                 JsonArrayParse(resBody);
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                //finish();
+
+                isLoaded = true;
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(isLoaded)
+            finish();
     }
 
     public void JsonArrayParse(String resBody) {
@@ -85,7 +87,9 @@ public class SplashActivity extends AppCompatActivity {
 
                 MainActivity.carDataArrayList.add(new CarData(jObj.getDouble("gpsX"), jObj.getDouble("gpsY"),
                             jObj.getInt("velocity"), jObj.getDouble("angle"), jObj.getString("roadType")));
+                MainActivity.sensorDataArrayList.add(new SensorData(80, 0.654)); // 임시 데이터
             }
+            Log.d(TAG, "carData len: " + MainActivity.carDataArrayList.size());
         } catch(JSONException e) {
             Log.e("SplashActivity", "JSONArray ERROR! - " + e);
             e.printStackTrace();
@@ -94,7 +98,6 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mHandler.removeCallbacks(mRunnable);
         super.onDestroy();
     }
 

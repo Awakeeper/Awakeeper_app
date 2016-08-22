@@ -4,15 +4,20 @@ package com.tenpm.awakeeper.model;
  * Created by ChaosControl on 2016. 8. 22..
  */
 public class SensorData {
-    private int hartBeat;
+    private int heartBeat;
     private double iris;
 
-    public int getHartBeat() {
-        return hartBeat;
+    public SensorData(int heartBeat, double iris){
+        this.heartBeat = heartBeat;
+        this.iris = iris;
     }
 
-    public void setHartBeat(int hartBeat) {
-        this.hartBeat = hartBeat;
+    public int getHartBeat() {
+        return heartBeat;
+    }
+
+    public void setHeartBeat(int heartBeat) {
+        this.heartBeat = heartBeat;
     }
 
     public double getIris() {
