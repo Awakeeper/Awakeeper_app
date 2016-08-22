@@ -285,9 +285,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void playSinging(){
-        Intent intent = new Intent(getApplicationContext(), SingingActivity.class);
-        intent.putExtra("songId", songId);
-        startActivity(intent);
+
     }
 
     private int originalVolume = 0;
