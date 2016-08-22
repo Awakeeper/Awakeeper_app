@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             isSongSet = true;
             songId = data.getStringExtra("songid");
-            Log.i("MainActivity", songId);
+            Log.i("MainActivity", "songid: " + songId);
         }
         else{
             isSongSet = false;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSounds(){
         String sdRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String filePath = "/mnt/sdcard/" + "경찰사이렌.mp3";
+        String filePath = "/sdcard/" + "경찰사이렌.mp3";
         // 오디오 파일을 로딩한다
         try {
             mPlayer = new MediaPlayer();

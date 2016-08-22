@@ -28,6 +28,8 @@ public class PreferenceActivity extends AppCompatActivity implements AdapterView
     private List<String> fileList = new ArrayList<String>();
     private File path;
     private final String TAG = "PreferenceActivity";
+    private final int MY_PERMISSION_REQUEST_STORAGE = 100;
+    private File root;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,18 +37,27 @@ public class PreferenceActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_preference);
         getSupportActionBar().hide();
 
-        File root = new File(Environment
+        root = new File(Environment
                 .getExternalStorageDirectory()
                 .getAbsolutePath());
-        ListDir(root);
+        checkPermission();
+        //ListDir(root);
 
     }
 
     void ListDir(File f){
         //path = new File(f.getPath() + "/Music");
+<<<<<<< HEAD
         path = new File(f.getPath());
         //path = new File("/sdcard/mp3");
+=======
+        path = new File("/sdcard");
+>>>>>>> 2fd8f8460b42225716441d18fd1de4b6484938c1
         Log.d(TAG, "path: " + path);
+        if(!path.exists()){
+            return;
+        }
+
         File[] files = path.listFiles();
         fileList.clear();
         for (File file : files){
@@ -69,5 +80,55 @@ public class PreferenceActivity extends AppCompatActivity implements AdapterView
         intent.putExtra("songid", path + "/" + fileList.get(i).toString());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkPermission() {
+        Log.i(TAG, "CheckPermission : " + checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE));
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Explain to the user why we need to write the permission.
+                Toast.makeText(this, "Read/Write external storage", Toast.LENGTH_SHORT).show();
+            }
+
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSION_REQUEST_STORAGE);
+
+            // MY_PERMISSION_REQUEST_STORAGE is an
+            // app-defined int constant
+
+        } else {
+            Log.e(TAG, "permission deny");
+            //writeFile();
+            ListDir(root);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    //writeFile();
+                    ListDir(root);
+                    // permission was granted, yay! do the
+                    // calendar task you need to do.
+
+                } else {
+
+                    Log.d(TAG, "Permission always deny");
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+        }
     }
 }
