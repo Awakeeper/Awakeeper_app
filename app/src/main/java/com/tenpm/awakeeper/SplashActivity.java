@@ -83,6 +83,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 MainActivity.carDataArrayList.add(new CarData(jObj.getDouble("gpsX"), jObj.getDouble("gpsY"),
                             jObj.getInt("velocity"), jObj.getDouble("angle"), jObj.getString("roadType")));
+                Log.i("SplashActivity", "getJSON");
             }
         } catch(JSONException e) {
             Log.e("SplashActivity", "JSONArray ERROR! - " + e);

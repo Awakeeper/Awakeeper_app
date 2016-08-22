@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
     private int soundId;
-    private int songId;
+    private String songId;
     private boolean isSongSet = false;
 
     private int drowsyLevel = 0;
@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             isSongSet = true;
-            songId = data.getIntExtra("songid", 0);
+            songId = data.getStringExtra("songid");
+            Log.i("MainActivity", songId);
         }
         else{
             isSongSet = false;
