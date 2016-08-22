@@ -2,26 +2,21 @@ package com.tenpm.awakeeper;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PreferenceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -41,36 +36,28 @@ public class PreferenceActivity extends AppCompatActivity implements AdapterView
                 .getExternalStorageDirectory()
                 .getAbsolutePath());
         checkPermission();
-        //ListDir(root);
-
     }
 
-    void ListDir(File f){
+    void ListDir(File f) {
         //path = new File(f.getPath() + "/Music");
-<<<<<<< HEAD
-        path = new File(f.getPath());
-        //path = new File("/sdcard/mp3");
-=======
         path = new File("/sdcard");
->>>>>>> 2fd8f8460b42225716441d18fd1de4b6484938c1
         Log.d(TAG, "path: " + path);
-        if(!path.exists()){
+        if (!path.exists()) {
             return;
         }
 
         File[] files = path.listFiles();
         fileList.clear();
-        for (File file : files){
+        for (File file : files) {
             fileList.add(file.getName());
         }
 
-        ListView listView = (ListView)findViewById(R.id.song_listView);
+        ListView listView = (ListView) findViewById(R.id.song_listView);
 
         ArrayAdapter<String> directoryList
                 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, fileList);
         listView.setAdapter(directoryList);
-        //setListAdapter(directoryList);
         listView.setOnItemClickListener(this);
     }
 
