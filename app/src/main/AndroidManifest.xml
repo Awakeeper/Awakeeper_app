@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tenpm.awakeeper">
 
-    <user-permission  android:name="android.permission.INTERNET"></user-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,9 +12,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="screenSize|orientation"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".SplashActivity"
+            android:configChanges="screenSize|orientation"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
