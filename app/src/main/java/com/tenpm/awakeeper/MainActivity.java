@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int STATE_DRIVE = 1;
     private static final int STATE_DROWSY1 = 2;
     private static final int STATE_DROWSY2 = 3;
+    private static final int STATE_SINGING = 4;
     public static int CurrentState = STATE_IDLE;
 
     private ScalableLayout mainBackground;
@@ -45,9 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView irisText;
     private TextView stateText;
     private TextView timeText;
+    private TextView coffeeText;
+    private ImageView coffeeImg;
+    private TextView rpmText;
+    private TextView coText;
+    private TextView windowOffsetText;
 
-    public static SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-    private int soundId;
     private String songId;
     private boolean isSongSet = false;
     private AudioManager am;
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setLayout();
         setSounds();
@@ -78,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         irisText = (TextView)findViewById(R.id.irisText);
         stateText = (TextView)findViewById(R.id.stateText);
         timeText = (TextView)findViewById(R.id.timeText);
+        coffeeText = (TextView)findViewById(R.id.coffeeText);
+        coffeeImg = (ImageView)findViewById(R.id.coffeeImg);
 
         prefButton = (Button)findViewById(R.id.prefButton);
         prefButton.setOnClickListener(new View.OnClickListener() {
@@ -128,15 +137,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             //mPlayer = new MediaPlayer();
             //mPlayer.setDataSource(filePath);
-            mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren);
-            //mPlayer.setOnCompletionListener(mCompleteListener);
+            mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
+            mPlayer.setOnCompletionListener(mCompleteListener);
             //mPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        soundId = soundPool.load(this, R.raw.siren, 1);
 
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         // 현재 볼륨 가져오기
@@ -146,6 +152,22 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer.OnCompletionListener mCompleteListener =
             new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer arg0) {
+                    Log.d(TAG, "music oncomplete");
+                    if(CurrentState == STATE_SINGING){
+                        Log.d(TAG, "music STATE_SINGING");
+                        // 커피 쿠폰 주기
+                        coffeeText.setVisibility(View.VISIBLE);
+                        coffeeImg.setVisibility(View.VISIBLE);
+                        // 이미지 터치 시 사라짐
+                        coffeeImg.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                view.setVisibility(View.GONE);
+                                coffeeText.setVisibility(View.GONE);
+                                driveState();
+                            }
+                        });
+                    }
                 }
             };
 
@@ -154,15 +176,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopMusic(){
-        if(mPlayer.isPlaying())
+        if(mPlayer != null && mPlayer.isPlaying())
         {
             mPlayer.pause();
             mPlayer.seekTo(0);
-            try {
-                mPlayer.prepare();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
         }
     }
 
@@ -193,14 +210,18 @@ public class MainActivity extends AppCompatActivity {
                         if(CurrentState == STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() > 0){
                             driveState();
                         }
-                        else if(CurrentState != STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() <= 0){
+                        else if(CurrentState != STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() <= 0 && carDataArrayList.get(currentTime).getRPM() == 0){ // rpm이 0이어야 정지
                             idleState();
                         }
                         else if(CurrentState == STATE_DRIVE && detectDrowsy(currentTime)){
                             // 졸음운전 확인
                             if(drowsyLevel == 0) {
-                                drowsyLevel1();
                                 drowsyLevel = 1;
+                                drowsyLevel1();
+                            }
+                            else if(drowsyLevel == 1){
+                                drowsyLevel = 2;
+                                drowsyLevel2();
                             }
                         }
                         else if(CurrentState == STATE_DRIVE && drowsyLevel == 1){
@@ -238,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.idle_text));
         prefButton.setVisibility(View.VISIBLE);
-        //soundPool.stop(soundId);
         stopMusic();
         drowsyLevel = 0;
         mainBackground.setBackgroundColor(Color.rgb(189,189,189));
@@ -249,13 +269,12 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.drive_text));
         prefButton.setVisibility(View.GONE);
-        //soundPool.stop(soundId);
         stopMusic();
         mainBackground.setBackgroundColor(Color.rgb(36 ,120,255));
     }
 
-    private boolean detectDrowsy(int currentTime){
-        if(currentTime >= 20 && currentTime <= 50)
+    private boolean detectDrowsy(int currentTime){ // RPM이 0이 되어야 시동이 꺼졌다고 확인함 아니면 신호등 정지도 있음
+        if(currentTime >= 20 && currentTime <= 70)
             return true;
 
         return false;
@@ -263,45 +282,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void drowsyLevel1(){
         setVolumeMax();
-        //soundPool.play(soundId, 1, 1, 0, 0, 1);
         playMusic();
         CurrentState = STATE_DROWSY1;
         stateText.setText(getString(R.string.drowsy_text1));
         mainBackground.setBackgroundColor(Color.rgb(255,54,54));
         TimerTask myTask = new TimerTask() {
             public void run() {
-                soundPool.stop(soundId);
+                stopMusic();
                 CurrentState = STATE_DRIVE;
             }
         };
         Timer timer = new Timer();
-        timer.schedule(myTask, 10000);
+        timer.schedule(myTask, 5000);
     }
 
     private void drowsyLevel2(){
-        //soundPool.play(soundId, 1, 1, 0, 0, 1);
-        playMusic();
         CurrentState = STATE_DROWSY2;
         stateText.setText(getString(R.string.drowsy_text2));
         mainBackground.setBackgroundColor(Color.rgb(99,36,189));
-        TimerTask myTask = new TimerTask() {
-            public void run() {
-                //soundPool.stop(soundId);
-                stopMusic();
-                if(isSongSet) // 음악 설정시 노래 부르기 시작
-                    playSinging();
-                else // 없으면 정지할 때 까지 사이렌 계속됨
-                    sirenUnlessStop();
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(myTask, 10000);
+        stopMusic();
+        if(isSongSet) // 음악 설정시 노래 부르기 시작
+            playSinging();
+        else // 없으면 정지할 때 까지 사이렌 계속됨
+            sirenUnlessStop();
     }
 
     private void playSinging(){
-        Intent intent = new Intent(getApplicationContext(), SingingActivity.class);
-        intent.putExtra("songId", songId);
-        startActivity(intent);
+        Log.d(TAG, "playsinging");
+        stateText.setText(R.string.singing_text);
+        CurrentState = STATE_SINGING;
+        mPlayer = MediaPlayer.create(MainActivity.this, R.raw.big_boy);
+        mPlayer.setOnCompletionListener(mCompleteListener);
+        playMusic();
     }
 
     private int originalVolume = 0;
@@ -330,5 +342,14 @@ public class MainActivity extends AppCompatActivity {
     private void moveWindow(int move){
         // mm단위
         // 창문이 mm이동했다고 노티
+        Toast.makeText(getApplicationContext(), "환기를 위하여 창문이 " + move + "mm 열립니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopMusic();
+        mPlayer.release();
+        mPlayer = null;
     }
 }

@@ -5,4 +5,6 @@
     <string name="drowsy_text1">졸음 1단계 감지되었습니다</string>
     <string name="drowsy_text2">졸음 2단계 감지되었습니다</string>
     <string name="loading_text">로딩중입니다...</string>
+    <string name="singing_text">노래를 재생합니다</string>
+    <string name="coffee_text">잠을 쫓기 위해 커피 기프티콘을 드립니다!\n\[스타벅스 양재점\]</string>
 </resources>

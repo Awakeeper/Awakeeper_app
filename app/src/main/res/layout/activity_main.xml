@@ -7,6 +7,7 @@
     android:layout_above="@+id/main_textview"
     android:layout_gravity="center"
     android:background="@android:color/darker_gray"
+    android:keepScreenOn="true"
     sl:scale_base_height="768"
     sl:scale_base_width="1280">
 
@@ -41,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:text="핸들 각도 "
+        android:text="핸들 각도: "
         android:textColor="@android:color/white"
         sl:scale_height="70"
         sl:scale_left="0"
@@ -54,16 +55,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:text="심박수 "
+        android:text="심박수: "
         android:textColor="@android:color/white"
         sl:scale_height="70"
         sl:scale_left="990"
         sl:scale_textsize="30"
         sl:scale_top="50"
-        sl:scale_width="300" />
+        sl:scale_width="330" />
 
     <TextView
         android:id="@+id/irisText"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
@@ -73,10 +75,11 @@
         sl:scale_left="990"
         sl:scale_textsize="30"
         sl:scale_top="120"
-        sl:scale_width="300" />
+        sl:scale_width="330" />
 
     <TextView
         android:id="@+id/timeText"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
@@ -85,8 +88,8 @@
         sl:scale_height="70"
         sl:scale_left="990"
         sl:scale_textsize="30"
-        sl:scale_top="170"
-        sl:scale_width="300" />
+        sl:scale_top="190"
+        sl:scale_width="330" />
 
     <TextView
         android:id="@+id/stateText"
@@ -107,28 +110,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="설정"
-        sl:scale_textsize="50"
         sl:scale_height="130"
         sl:scale_left="950"
+        sl:scale_textsize="50"
         sl:scale_top="570"
-        sl:scale_width="300"/>
+        sl:scale_width="300" />
 
     <Button
         android:id="@+id/startScenarioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="주행시작"
-        sl:scale_textsize="50"
         sl:scale_height="130"
         sl:scale_left="450"
+        sl:scale_textsize="50"
         sl:scale_top="570"
-        sl:scale_width="300"/>
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@android:color/white"-->
-    <!--sl:scale_height="220"-->
-    <!--sl:scale_left="400"-->
-    <!--sl:scale_top="230"-->
-    <!--sl:scale_width="220" />-->
+        sl:scale_width="300" />
+
+    <ImageView
+        android:id="@+id/coffeeImg"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:color/white"
+        sl:scale_height="500"
+        sl:scale_left="400"
+        sl:scale_top="190"
+        sl:scale_width="400" />
+
+    <TextView
+        android:id="@+id/coffeeText"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:text="@string/coffee_text"
+        android:textColor="@android:color/white"
+        sl:scale_height="130"
+        sl:scale_left="360"
+        sl:scale_textsize="50"
+        sl:scale_top="60"
+        sl:scale_width="500" />
 </com.ssomai.android.scalablelayout.ScalableLayout>
