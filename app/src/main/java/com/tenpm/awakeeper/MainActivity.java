@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
     private int soundId;
-    private int songId;
+    private String songId;
     private boolean isSongSet = false;
     private AudioManager am;
 
@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             isSongSet = true;
-            songId = data.getIntExtra("songid", 0);
+            songId = data.getStringExtra("songid");
+            Log.i("MainActivity", songId);
         }
         else{
             isSongSet = false;
@@ -227,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
         stateText.setText(getString(R.string.idle_text));
         prefButton.setVisibility(View.VISIBLE);
         soundPool.stop(soundId);
-        soundPool.stop(songId);
         drowsyLevel = 0;
         mainBackground.setBackgroundColor(Color.rgb(189,189,189));
     }
@@ -238,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
         stateText.setText(getString(R.string.drive_text));
         prefButton.setVisibility(View.GONE);
         soundPool.stop(soundId);
-        soundPool.stop(songId);
         mainBackground.setBackgroundColor(Color.rgb(36 ,120,255));
     }
 

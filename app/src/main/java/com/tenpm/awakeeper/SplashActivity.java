@@ -88,6 +88,7 @@ public class SplashActivity extends AppCompatActivity {
                 MainActivity.carDataArrayList.add(new CarData(jObj.getDouble("gpsX"), jObj.getDouble("gpsY"),
                             jObj.getInt("velocity"), jObj.getDouble("angle"), jObj.getString("roadType")));
                 MainActivity.sensorDataArrayList.add(new SensorData(80, 0.654)); // 임시 데이터
+                //Log.i("SplashActivity", "getJSON");
             }
             Log.d(TAG, "carData len: " + MainActivity.carDataArrayList.size());
         } catch(JSONException e) {
