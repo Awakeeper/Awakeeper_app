@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             mPlayer = new MediaPlayer();
             mPlayer.setDataSource(filePath);
             mPlayer.setOnCompletionListener(mCompleteListener);
+            mPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,10 +149,14 @@ public class MainActivity extends AppCompatActivity {
             };
 
     private void playMusic(){
-        try {
-            mPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
+        mPlayer.start();
+    }
+
+    private void stopMusic(){
+        if(mPlayer.isPlaying())
+        {
+            mPlayer.pause();
+            mPlayer.seekTo(0);
         }
     }
 
@@ -227,7 +232,8 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.idle_text));
         prefButton.setVisibility(View.VISIBLE);
-        soundPool.stop(soundId);
+        //soundPool.stop(soundId);
+        stopMusic();
         drowsyLevel = 0;
         mainBackground.setBackgroundColor(Color.rgb(189,189,189));
     }
@@ -237,7 +243,8 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.drive_text));
         prefButton.setVisibility(View.GONE);
-        soundPool.stop(soundId);
+        //soundPool.stop(soundId);
+        stopMusic();
         mainBackground.setBackgroundColor(Color.rgb(36 ,120,255));
     }
 
@@ -250,8 +257,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void drowsyLevel1(){
         setVolumeMax();
-        soundPool.play(soundId, 1, 1, 0, 0, 1);
-        //playMusic();
+        //soundPool.play(soundId, 1, 1, 0, 0, 1);
+        playMusic();
         CurrentState = STATE_DROWSY1;
         stateText.setText(getString(R.string.drowsy_text1));
         mainBackground.setBackgroundColor(Color.rgb(255,54,54));
@@ -266,14 +273,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drowsyLevel2(){
-        soundPool.play(soundId, 1, 1, 0, 0, 1);
-        //playMusic();
+        //soundPool.play(soundId, 1, 1, 0, 0, 1);
+        playMusic();
         CurrentState = STATE_DROWSY2;
         stateText.setText(getString(R.string.drowsy_text2));
         mainBackground.setBackgroundColor(Color.rgb(99,36,189));
         TimerTask myTask = new TimerTask() {
             public void run() {
-                soundPool.stop(soundId);
+                //soundPool.stop(soundId);
+                stopMusic();
                 if(isSongSet) // 음악 설정시 노래 부르기 시작
                     playSinging();
                 else // 없으면 정지할 때 까지 사이렌 계속됨
