@@ -8,7 +8,15 @@ public class CarData {
     private double gpsY;
     private int velocity;
     private double angle;
-    private String loadType;
+    private String roadType;
+
+    public CarData(double gpsX, double gpsY, int velocity, double angle, String roadType) {
+        this.gpsX = gpsX;
+        this.gpsY = gpsY;
+        this.velocity = velocity;
+        this.angle = angle;
+        this.roadType = roadType;
+    }
 
     public double getGpsX() {
         return gpsX;
@@ -42,11 +50,11 @@ public class CarData {
         this.angle = angle;
     }
 
-    public String getLoadType() {
-        return loadType;
+    public String getRoadType() {
+        return roadType;
     }
 
-    public void setLoadType(String loadType) {
-        this.loadType = loadType;
+    public void setRoadType(String roadType) {
+        this.roadType = roadType;
     }
 }

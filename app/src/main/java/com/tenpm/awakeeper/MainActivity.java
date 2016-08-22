@@ -9,8 +9,8 @@ import com.tenpm.awakeeper.model.SensorData;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static ArrayList<CarData> carDataArrayList = new ArrayList<CarData>();
-    private static ArrayList<SensorData> sensorDataArrayList = new ArrayList<SensorData>();
+    public static ArrayList<CarData> carDataArrayList = new ArrayList<CarData>();
+    public static ArrayList<SensorData> sensorDataArrayList = new ArrayList<SensorData>();
     private static final int STATE_IDLE = 0;
     private static final int STATE_DRIVE = 1;
     private static final int STATE_DROWSY1 = 2;
