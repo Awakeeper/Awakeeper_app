@@ -82,9 +82,9 @@ public class SplashActivity extends AppCompatActivity {
                 JSONObject jObj = jsonData.getJSONObject(i);
 
                 MainActivity.carDataArrayList.add(new CarData(jObj.getDouble("gpsX"), jObj.getDouble("gpsY"),
-                            jObj.getInt("velocity"), jObj.getDouble("angle"), jObj.getString("roadType"), 1, 0, 999, 0));
-                MainActivity.sensorDataArrayList.add(new SensorData(80, 0.654)); // 임시 데이터
-                //Log.i("SplashActivity", "getJSON");
+                            jObj.getInt("velocity"), jObj.getDouble("angle"), jObj.getString("roadType"),
+                            jObj.getDouble("CO"), jObj.getInt("windowOffset"), jObj.getInt("RPM"), jObj.getInt("aircondition")));
+                MainActivity.sensorDataArrayList.add(new SensorData(jObj.getInt("heartBeat"), jObj.getDouble("iris"))); // 임시 데이터
             }
             Log.d(TAG, "carData len: " + MainActivity.carDataArrayList.size());
         } catch(JSONException e) {

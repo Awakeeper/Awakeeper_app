@@ -29,7 +29,6 @@
         <activity
             android:name=".PreferenceActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity android:name=".SingingActivity" />
     </application>
 
 </manifest>
