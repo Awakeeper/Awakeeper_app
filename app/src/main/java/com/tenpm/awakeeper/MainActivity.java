@@ -116,6 +116,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // 이미지 터치 시 사라짐
+        coffeeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setVisibility(View.GONE);
+                coffeeText.setVisibility(View.GONE);
+                driveState();
+            }
+        });
     }
 
     @Override
@@ -158,6 +168,14 @@ public class MainActivity extends AppCompatActivity {
                         // 커피 쿠폰 주기
                         coffeeText.setVisibility(View.VISIBLE);
                         coffeeImg.setVisibility(View.VISIBLE);
+
+                        try {
+                            mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
+                            mPlayer.setOnCompletionListener(mCompleteListener);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         // 이미지 터치 시 사라짐
                         coffeeImg.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -261,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         prefButton.setVisibility(View.VISIBLE);
         stopMusic();
         drowsyLevel = 0;
-        mainBackground.setBackgroundColor(Color.rgb(189,189,189));
+        mainBackground.setBackgroundColor(Color.rgb(189, 189, 189));
     }
 
     private void driveState(){
@@ -286,10 +304,12 @@ public class MainActivity extends AppCompatActivity {
         CurrentState = STATE_DROWSY1;
         stateText.setText(getString(R.string.drowsy_text1));
         mainBackground.setBackgroundColor(Color.rgb(255,54,54));
+
         TimerTask myTask = new TimerTask() {
             public void run() {
                 stopMusic();
                 CurrentState = STATE_DRIVE;
+                this.cancel();
             }
         };
         Timer timer = new Timer();
@@ -311,9 +331,38 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "playsinging");
         stateText.setText(R.string.singing_text);
         CurrentState = STATE_SINGING;
-        mPlayer = MediaPlayer.create(MainActivity.this, R.raw.big_boy);
+        mPlayer = MediaPlayer.create(MainActivity.this, R.raw.navillera);
         mPlayer.setOnCompletionListener(mCompleteListener);
         playMusic();
+
+        TimerTask myTask = new TimerTask() {
+            public void run() {
+                thisActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopMusic();
+
+                        if (CurrentState == STATE_SINGING) {
+                            Log.d(TAG, "music STATE_SINGING");
+                            // 커피 쿠폰 주기
+                            coffeeText.setVisibility(View.VISIBLE);
+                            coffeeImg.setVisibility(View.VISIBLE);
+
+                            try {
+                                mPlayer.release();
+                                mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
+                                mPlayer.setOnCompletionListener(mCompleteListener);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                this.cancel();
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(myTask, 5000);
     }
 
     private int originalVolume = 0;
