@@ -172,10 +172,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/starbucks"
-        sl:scale_height="374"
-        sl:scale_left="410"
-        sl:scale_top="250"
-        sl:scale_width="405" />
+        sl:scale_height="450"
+        sl:scale_left="360"
+        sl:scale_top="220"
+        sl:scale_width="500" />
 
     <TextView
         android:id="@+id/coffeeText"

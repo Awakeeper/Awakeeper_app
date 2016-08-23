@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 driveState();
             }
         });
+
+        mainColor = 0x0054FF;
     }
 
     @Override
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private MediaPlayer mPlayer = null;
+    private MediaPlayer mPlayer2 = null;
 
     private void setSounds(){
         String sdRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -168,14 +171,7 @@ public class MainActivity extends AppCompatActivity {
                         // 커피 쿠폰 주기
                         coffeeText.setVisibility(View.VISIBLE);
                         coffeeImg.setVisibility(View.VISIBLE);
-
-                        try {
-                            mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
-                            mPlayer.setOnCompletionListener(mCompleteListener);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                        startScenarioButton.setVisibility(View.GONE);
                         // 이미지 터치 시 사라짐
                         coffeeImg.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -189,20 +185,33 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-    private void playMusic(){
-        mPlayer.start();
+    private void playMusic(int flag){
+        if(flag == 1)
+            mPlayer.start();
+        else if(flag == 2)
+            mPlayer2.start();
     }
 
-    private void stopMusic(){
-        if(mPlayer != null && mPlayer.isPlaying())
-        {
-            mPlayer.pause();
-            mPlayer.seekTo(0);
+    private void stopMusic(int flag){
+        if(flag == 1){
+            if(mPlayer != null && mPlayer.isPlaying())
+            {
+                mPlayer.pause();
+                mPlayer.seekTo(0);
+            }
+        }
+        else if(flag == 2) {
+            if (mPlayer2 != null && mPlayer2.isPlaying()) {
+                mPlayer2.pause();
+                mPlayer2.seekTo(0);
+            }
         }
     }
 
     public int currentTime = 0;
     public int totalTime = 0;
+
+    private int mainColor = 0;
 
     private void playScenario(){
         currentTime = 0;
@@ -214,6 +223,12 @@ public class MainActivity extends AppCompatActivity {
                 thisActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if(currentTime >= totalTime){ // 시나리오 끝
+                            idleState();
+                            timer.cancel();
+                            return;
+                        }
+
                         // 데이터값 ui에 표시
                         gpsText.setText("GPS: " + carDataArrayList.get(currentTime).getGpsX() + "," + carDataArrayList.get(currentTime).getGpsY());
                         velocityText.setText("속도: " + carDataArrayList.get(currentTime).getVelocity());
@@ -221,12 +236,16 @@ public class MainActivity extends AppCompatActivity {
                         heartbeatText.setText("심박수: " + sensorDataArrayList.get(currentTime).getHartBeat());
                         irisText.setText("홍채값: " + sensorDataArrayList.get(currentTime).getIris());
                         timeText.setText("시간: " + currentTime + "초");
-                        coText.setText("CO농도 " + carDataArrayList.get(currentTime).getCO());
-                        windowOffsetText.setText("창문열림: " + carDataArrayList.get(currentTime).getWindowOffset());
+                        coText.setText("CO농도 " + carDataArrayList.get(currentTime).getCO() + "ppm");
+                        windowOffsetText.setText("창문열림: " + carDataArrayList.get(currentTime).getWindowOffset() + "mm");
                         rpmText.setText("RPM: " + carDataArrayList.get(currentTime).getRPM());
 
-                        if(CurrentState == STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() > 0){
+                        int diff = 100*(sensorDataArrayList.get(currentTime).getHartBeat() - 60);
+                        mainColor += diff;
+
+                        if(CurrentState == STATE_IDLE && (carDataArrayList.get(currentTime).getVelocity() > 0 || carDataArrayList.get(currentTime).getRPM() > 0)){
                             driveState();
+                            //mainBackground.setBackgroundColor(mainColor);
                         }
                         else if(CurrentState != STATE_IDLE && carDataArrayList.get(currentTime).getVelocity() <= 0 && carDataArrayList.get(currentTime).getRPM() == 0){ // rpm이 0이어야 정지
                             idleState();
@@ -242,18 +261,13 @@ public class MainActivity extends AppCompatActivity {
                                 drowsyLevel2();
                             }
                         }
-                        else if(CurrentState == STATE_DRIVE && drowsyLevel == 1){
+                        else if(CurrentState == STATE_DRIVE && drowsyLevel == 1 && detectDrowsy(currentTime)){
                             drowsyLevel = 2;
                             drowsyLevel2();
                         }
                         else if((CurrentState == STATE_DROWSY1 || CurrentState == STATE_DROWSY2) && !detectDrowsy(currentTime)){
                             // 졸음 깬 경우
                             driveState();
-                        }
-
-                        if(currentTime >= totalTime){ // 시나리오 끝
-                            idleState();
-                            timer.cancel();
                         }
 
                         currentTime++;
@@ -277,7 +291,9 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.idle_text));
         prefButton.setVisibility(View.VISIBLE);
-        stopMusic();
+        startScenarioButton.setVisibility(View.VISIBLE);
+        stopMusic(1);
+        stopMusic(2);
         drowsyLevel = 0;
         mainBackground.setBackgroundColor(Color.rgb(189, 189, 189));
     }
@@ -287,27 +303,37 @@ public class MainActivity extends AppCompatActivity {
         resumeVolume();
         stateText.setText(getString(R.string.drive_text));
         prefButton.setVisibility(View.GONE);
-        stopMusic();
+        startScenarioButton.setVisibility(View.VISIBLE);
+        stopMusic(1);
+        stopMusic(2);
         mainBackground.setBackgroundColor(Color.rgb(36 ,120,255));
     }
 
     private boolean detectDrowsy(int currentTime){ // RPM이 0이 되어야 시동이 꺼졌다고 확인함 아니면 신호등 정지도 있음
-        if(currentTime >= 20 && currentTime <= 70)
+        //if(currentTime >= 20 && currentTime <= 70)
+        //    return true;
+
+        if(sensorDataArrayList.get(currentTime).getHartBeat() <= 60){
+            if(carDataArrayList.get(currentTime).getCO() >= 20 && carDataArrayList.get(currentTime).getWindowOffset() == 0){
+                moveWindow(carDataArrayList.get(currentTime).getWindowOffset() + 15);
+            }
+            Log.d(TAG, "detect currenttime: " + currentTime);
             return true;
+        }
 
         return false;
     }
 
     private void drowsyLevel1(){
         setVolumeMax();
-        playMusic();
+        playMusic(1);
         CurrentState = STATE_DROWSY1;
         stateText.setText(getString(R.string.drowsy_text1));
         mainBackground.setBackgroundColor(Color.rgb(255,54,54));
 
         TimerTask myTask = new TimerTask() {
             public void run() {
-                stopMusic();
+                stopMusic(1);
                 CurrentState = STATE_DRIVE;
                 this.cancel();
             }
@@ -320,41 +346,48 @@ public class MainActivity extends AppCompatActivity {
         CurrentState = STATE_DROWSY2;
         stateText.setText(getString(R.string.drowsy_text2));
         mainBackground.setBackgroundColor(Color.rgb(99,36,189));
-        stopMusic();
-        if(isSongSet) // 음악 설정시 노래 부르기 시작
-            playSinging();
-        else // 없으면 정지할 때 까지 사이렌 계속됨
-            sirenUnlessStop();
+        stopMusic(1);
+        TimerTask myTask = new TimerTask() {
+            public void run() {
+                thisActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isSongSet) // 음악 설정시 노래 부르기 시작
+                            playSinging();
+                        else // 없으면 정지할 때 까지 사이렌 계속됨
+                            sirenUnlessStop();
+                    }
+                });
+                this.cancel();
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(myTask, 1000);
     }
 
     private void playSinging(){
         Log.d(TAG, "playsinging");
         stateText.setText(R.string.singing_text);
+        mainBackground.setBackgroundColor(Color.rgb(255,94,0));
         CurrentState = STATE_SINGING;
-        mPlayer = MediaPlayer.create(MainActivity.this, R.raw.navillera);
-        mPlayer.setOnCompletionListener(mCompleteListener);
-        playMusic();
+        mPlayer2 = MediaPlayer.create(MainActivity.this, R.raw.navillera);
+        mPlayer2.setOnCompletionListener(mCompleteListener);
+        playMusic(2);
 
         TimerTask myTask = new TimerTask() {
             public void run() {
                 thisActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        stopMusic();
+                        Log.d(TAG, "singing stop! " + CurrentState);
+                        stopMusic(2);
 
-                        if (CurrentState == STATE_SINGING) {
+                        if (CurrentState == STATE_SINGING || CurrentState == STATE_DRIVE) {
                             Log.d(TAG, "music STATE_SINGING");
                             // 커피 쿠폰 주기
                             coffeeText.setVisibility(View.VISIBLE);
                             coffeeImg.setVisibility(View.VISIBLE);
-
-                            try {
-                                mPlayer.release();
-                                mPlayer = MediaPlayer.create(MainActivity.this, R.raw.siren2);
-                                mPlayer.setOnCompletionListener(mCompleteListener);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            startScenarioButton.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -362,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(myTask, 5000);
+        timer.schedule(myTask, 15000);
     }
 
     private int originalVolume = 0;
@@ -397,8 +430,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopMusic();
-        mPlayer.release();
+        stopMusic(1);
+        stopMusic(2);
         mPlayer = null;
+        mPlayer2 = null;
     }
 }
