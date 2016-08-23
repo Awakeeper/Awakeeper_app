@@ -224,7 +224,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(currentTime >= totalTime){ // 시나리오 끝
-                            idleState();
+                            isPlaying = false;
+                            startScenarioButton.setText("주행 시작");
+                            stopScenario();
                             timer.cancel();
                             return;
                         }
@@ -292,6 +294,8 @@ public class MainActivity extends AppCompatActivity {
         stateText.setText(getString(R.string.idle_text));
         prefButton.setVisibility(View.VISIBLE);
         startScenarioButton.setVisibility(View.VISIBLE);
+        coffeeImg.setVisibility(View.GONE);
+        coffeeText.setVisibility(View.GONE);
         stopMusic(1);
         stopMusic(2);
         drowsyLevel = 0;
@@ -434,5 +438,7 @@ public class MainActivity extends AppCompatActivity {
         stopMusic(2);
         mPlayer = null;
         mPlayer2 = null;
+        carDataArrayList.clear();
+        sensorDataArrayList.clear();
     }
 }
